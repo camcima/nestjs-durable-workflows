@@ -77,7 +77,7 @@ src/
 │   ├── workflow-event-type.enum.ts       # Event type string constants
 │   └── workflow-events.ts                # Event payload interfaces
 ├── utils/
-│   ├── flatten-state-value.ts            # XState StateValue -> dot-notation string
+│   ├── flatten-state-value.ts            # State value -> dot-notation string
 │   ├── derive-table-name.ts              # PascalCase -> snake_case pluralized
 │   └── get-timeout-minutes.ts            # Extract timeoutMinutes from state meta
 └── cli/
@@ -92,7 +92,7 @@ tests/
 │   ├── workflow-registry.spec.ts
 │   ├── workflow-entity-decorator.spec.ts
 │   └── generate-migration.spec.ts
-├── integration/                          # Mock database adapter, real XState
+├── integration/                          # Mock database adapter, real engine
 │   ├── workflow-manager.spec.ts
 │   ├── always-transitions.spec.ts
 │   ├── workflow-module.spec.ts
@@ -171,7 +171,7 @@ When adding new source files, check that coverage doesn't drop below the thresho
 
 - **Strict mode is enabled.** All `strict` flags are on in `tsconfig.json`, including `noUnusedLocals`, `noUnusedParameters`, and `noImplicitReturns`.
 - **Target ES2021.** Use modern JavaScript features available in Node.js 18+.
-- **Use `type` imports** for types that are only used in type positions: `import type { AnyStateMachine } from 'xstate'`.
+- **Use `type` imports** for types that are only used in type positions.
 - **Prefer `interface` over `type`** for object shapes.
 - **No `any` unless absolutely necessary.** When interfacing with loosely-typed external APIs (like Drizzle's `execute` result), use `any` with a comment explaining why.
 

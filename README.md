@@ -136,7 +136,6 @@ export class OrderService {
 - [Migration Generator](./docs/migration-generator.md)
 - [Error Handling](./docs/error-handling.md)
 - [Testing](./docs/testing.md)
-- [JS State Machine Migration Spec](./docs/js-state-machine-migration-spec.md)
 
 ## License
 
