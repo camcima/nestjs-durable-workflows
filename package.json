@@ -1,0 +1,76 @@
+{
+  "name": "nestjs-durable-workflows",
+  "version": "0.1.1",
+  "description": "NestJS module for durable workflow execution with javascript-state-machine and PostgreSQL persistence",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "nestjs-durable-workflows": "dist/cli/generate-migration.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "release": "release-it",
+    "release:dry": "release-it --dry-run",
+    "test": "jest",
+    "test:unit": "jest --testPathPatterns=tests/unit",
+    "test:integration": "jest --testPathPatterns=tests/integration",
+    "test:e2e": "jest --testPathPatterns=tests/e2e",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "keywords": [
+    "nestjs",
+    "workflow",
+    "state-machine",
+    "durable"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@nestjs/common": ">=10.0.0",
+    "@nestjs/core": ">=10.0.0",
+    "@nestjs/event-emitter": ">=2.0.0",
+    "@nestjs/schedule": ">=4.0.0",
+    "drizzle-orm": ">=0.30.0",
+    "javascript-state-machine": ">=3.1.0",
+    "pg": ">=8.0.0",
+    "reflect-metadata": ">=0.1.13",
+    "rxjs": ">=7.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2",
+    "@eslint/js": "^10.0.1",
+    "@nestjs/common": "^11.1.14",
+    "@nestjs/core": "^11.1.14",
+    "@nestjs/event-emitter": "^3.0.1",
+    "@nestjs/schedule": "^6.1.1",
+    "@nestjs/testing": "^11.1.14",
+    "@types/cron": "^2.4.3",
+    "@types/jest": "^30.0.0",
+    "@types/pg": "^8.16.0",
+    "drizzle-orm": "^0.45.1",
+    "eslint": "^10.0.1",
+    "eslint-config-prettier": "^10.1.8",
+    "jest": "^30.2.0",
+    "pg": "^8.18.0",
+    "prettier": "^3.8.1",
+    "reflect-metadata": "^0.2.2",
+    "release-it": "^19.2.4",
+    "rxjs": "^7.8.2",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.0"
+  },
+  "dependencies": {
+    "javascript-state-machine": "^3.1.0"
+  }
+}
