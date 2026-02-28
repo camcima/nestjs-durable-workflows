@@ -74,7 +74,8 @@ export function validateWorkflowDefinition(
 
     if (
       stateDef.timeoutMinutes !== undefined &&
-      (typeof stateDef.timeoutMinutes !== 'number' || stateDef.timeoutMinutes < 0)
+      (typeof stateDef.timeoutMinutes !== 'number' ||
+        stateDef.timeoutMinutes < 0)
     ) {
       throw new Error(
         `Workflow definition ${definition.id}: state "${stateName}" has invalid timeoutMinutes`,

@@ -165,8 +165,6 @@ describe('JavascriptStateMachineEngine', () => {
       workflowId: 'wf-1',
     });
 
-    await expect(runtime.send({ type: 'START' })).rejects.toThrow(
-      'Guard',
-    );
+    await expect(runtime.send({ type: 'START' })).rejects.toThrow('Guard');
   });
 });

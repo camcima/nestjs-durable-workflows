@@ -43,7 +43,9 @@ function toConfig(rule: TransitionRule): TransitionConfig {
   return typeof rule === 'string' ? { target: rule } : rule;
 }
 
-function toActions(action?: WorkflowAction | WorkflowAction[]): WorkflowAction[] {
+function toActions(
+  action?: WorkflowAction | WorkflowAction[],
+): WorkflowAction[] {
   return toArray(action);
 }
 
@@ -167,7 +169,9 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
   private buildCompiledTransitions(): void {
     let counter = 0;
 
-    for (const [stateName, stateDef] of Object.entries(this.definition.states)) {
+    for (const [stateName, stateDef] of Object.entries(
+      this.definition.states,
+    )) {
       const stateTransitions: StateTransitions = {
         on: new Map<string, CompiledTransition[]>(),
         always: [],
@@ -238,7 +242,12 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
       }
 
       if (!candidate.to) {
-        await this.runActions(candidate.actions, this.fsm.state, this.fsm.state, event);
+        await this.runActions(
+          candidate.actions,
+          this.fsm.state,
+          this.fsm.state,
+          event,
+        );
         return false;
       }
 
@@ -295,7 +304,10 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
     }
 
     await Promise.resolve(
-      (transitionFn as (evt: WorkflowEventPayload) => unknown).call(this.fsm, event),
+      (transitionFn as (evt: WorkflowEventPayload) => unknown).call(
+        this.fsm,
+        event,
+      ),
     );
 
     const toState = this.fsm.state;

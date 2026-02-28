@@ -74,13 +74,7 @@ export class WorkflowManager {
         expiresAt,
       });
 
-      await this.persistHistory(
-        txAdapter,
-        tableName,
-        id,
-        transitions,
-        event,
-      );
+      await this.persistHistory(txAdapter, tableName, id, transitions, event);
 
       if (isNew) {
         this.eventEmitter.emit(WorkflowEventType.CREATED, {

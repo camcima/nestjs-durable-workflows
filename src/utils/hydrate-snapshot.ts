@@ -42,7 +42,10 @@ export function hydrateSnapshot(
 
   const candidate = snapshot as Partial<DurableSnapshotV1>;
 
-  if (candidate.schema !== 'durable-workflow-snapshot' || candidate.version !== 1) {
+  if (
+    candidate.schema !== 'durable-workflow-snapshot' ||
+    candidate.version !== 1
+  ) {
     throw new InvalidSnapshotError(
       workflowId,
       `Snapshot for workflow ${workflowId} is not a supported V1 durable snapshot`,
@@ -56,7 +59,10 @@ export function hydrateSnapshot(
     );
   }
 
-  if (typeof candidate.state !== 'string' || !(candidate.state in definition.states)) {
+  if (
+    typeof candidate.state !== 'string' ||
+    !(candidate.state in definition.states)
+  ) {
     throw new InvalidSnapshotError(
       workflowId,
       `Snapshot for workflow ${workflowId} has invalid state ${String(candidate.state)}`,

@@ -34,7 +34,11 @@ export class WorkflowRegistry implements OnModuleInit {
       );
 
       if (metadata) {
-        this.register(metadata.tableName, metadata.definition, wrapper.metatype);
+        this.register(
+          metadata.tableName,
+          metadata.definition,
+          wrapper.metatype,
+        );
         this.logger.log(
           `Registered workflow entity: ${wrapper.metatype.name} -> ${metadata.tableName}`,
         );

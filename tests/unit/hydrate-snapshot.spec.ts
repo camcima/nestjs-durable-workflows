@@ -1,6 +1,9 @@
 import { InvalidSnapshotError } from '../../src/errors/invalid-snapshot.error';
 import type { DurableWorkflowDefinition } from '../../src/interfaces/durable-workflow-definition.interface';
-import { hydrateSnapshot, isFinalState } from '../../src/utils/hydrate-snapshot';
+import {
+  hydrateSnapshot,
+  isFinalState,
+} from '../../src/utils/hydrate-snapshot';
 
 const definition: DurableWorkflowDefinition = {
   id: 'order',

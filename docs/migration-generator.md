@@ -48,13 +48,13 @@ CREATE TABLE order_workflows (
 );
 ```
 
-| Column        | Type          | Description                                                                                                           |
-| ------------- | ------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `id`          | `UUID`        | Primary key. Uses native `uuidv7()` (time-ordered) on PostgreSQL 18+.                                                 |
-| `state_value` | `TEXT`        | Flattened state path in dot-notation (e.g., `"picking.active"`). Denormalized for efficient SQL queries.              |
-| `snapshot`    | `JSONB`       | Durable runtime snapshot envelope (`schema`, `version`, `engine`, `state`, `status`, `context`).                      |
-| `expires_at`  | `TIMESTAMPTZ` | Calculated from state-level `timeoutMinutes`. `NULL` if the current state has no timeout.                             |
-| `updated_at`  | `TIMESTAMPTZ` | Automatically updated on every write.                                                                                 |
+| Column        | Type          | Description                                                                                              |
+| ------------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| `id`          | `UUID`        | Primary key. Uses native `uuidv7()` (time-ordered) on PostgreSQL 18+.                                    |
+| `state_value` | `TEXT`        | Flattened state path in dot-notation (e.g., `"picking.active"`). Denormalized for efficient SQL queries. |
+| `snapshot`    | `JSONB`       | Durable runtime snapshot envelope (`schema`, `version`, `engine`, `state`, `status`, `context`).         |
+| `expires_at`  | `TIMESTAMPTZ` | Calculated from state-level `timeoutMinutes`. `NULL` if the current state has no timeout.                |
+| `updated_at`  | `TIMESTAMPTZ` | Automatically updated on every write.                                                                    |
 
 ### History Table
 

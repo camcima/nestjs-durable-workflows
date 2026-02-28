@@ -92,7 +92,10 @@ The table name is derived from class name (`OrderWorkflow` -> `order_workflows`)
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { WorkflowModule, DrizzleWorkflowAdapter } from 'nestjs-durable-workflows';
+import {
+  WorkflowModule,
+  DrizzleWorkflowAdapter,
+} from 'nestjs-durable-workflows';
 
 @Module({
   imports: [

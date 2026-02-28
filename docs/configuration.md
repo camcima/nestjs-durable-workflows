@@ -32,14 +32,14 @@ WorkflowModule.forRootAsync({
 
 ## Options
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `adapter` | `IWorkflowDbAdapter` | required | Persistence adapter |
-| `engine` | `IWorkflowEngine` | `JavascriptStateMachineEngine` | Runtime engine override |
-| `cronExpression` | `string` | `*/60 * * * * *` | Timeout cron expression |
-| `timeoutEventType` | `string` | `TIMEOUT` | Timeout event type |
-| `enableTimeoutCron` | `boolean` | `true` | Enable internal timeout cron |
-| `maxTransitionDepth` | `number` | `100` | Recursive transition safety limit |
+| Option               | Type                 | Default                        | Description                       |
+| -------------------- | -------------------- | ------------------------------ | --------------------------------- |
+| `adapter`            | `IWorkflowDbAdapter` | required                       | Persistence adapter               |
+| `engine`             | `IWorkflowEngine`    | `JavascriptStateMachineEngine` | Runtime engine override           |
+| `cronExpression`     | `string`             | `*/60 * * * * *`               | Timeout cron expression           |
+| `timeoutEventType`   | `string`             | `TIMEOUT`                      | Timeout event type                |
+| `enableTimeoutCron`  | `boolean`            | `true`                         | Enable internal timeout cron      |
+| `maxTransitionDepth` | `number`             | `100`                          | Recursive transition safety limit |
 
 ## Workflow Registration
 

@@ -36,7 +36,9 @@ const manager = new WorkflowManager(registry, adapter, new EventEmitter2(), {
   timeoutEventType: 'TIMEOUT',
 });
 
-const result = await manager.send('order_workflows', 'order-1', { type: 'START' });
+const result = await manager.send('order_workflows', 'order-1', {
+  type: 'START',
+});
 expect(result.transitionCount).toBeGreaterThan(0);
 ```
 
