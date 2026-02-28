@@ -153,6 +153,25 @@ The adapter supports:
 - `INSERT ... ON CONFLICT` upserts for live state
 - transaction-scoped adapter instances via `BEGIN/COMMIT/ROLLBACK`
 
+## Using the In-Memory Adapter (Testing)
+
+The library also ships with `InMemoryWorkflowAdapter` for fast tests without PostgreSQL.
+
+```typescript
+import { InMemoryWorkflowAdapter } from 'nestjs-durable-workflows';
+
+const adapter = new InMemoryWorkflowAdapter('orders');
+```
+
+> **Warning:** `InMemoryWorkflowAdapter` is intended for testing only. Do not use it in production because data is process-local, non-durable, and lost on restart.
+
+The in-memory adapter supports the same `IWorkflowDbAdapter` contract:
+
+- `findOne`, `upsertLive`, `insertHistory`, `findExpired`, `findByState`
+- `transaction(cb)` with commit/rollback semantics via state snapshotting
+
+This adapter is intended for unit/integration-style test scenarios where you want realistic persistence behavior without external infrastructure.
+
 ## Building a Custom Adapter
 
 Implement `IWorkflowDbAdapter` for your preferred database library.

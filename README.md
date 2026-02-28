@@ -14,7 +14,7 @@ Define workflow types with durable workflow definitions. The module handles tran
 - Full transition history (including internal always-transitions)
 - Timeout expiration with cron-driven timeout event dispatch
 - Row-level lock concurrency safety (`SELECT ... FOR UPDATE`)
-- Adapter pattern (`Drizzle`, `Prisma` raw, `pg`)
+- Adapter pattern (`Drizzle`, `Prisma` raw, `pg`, `InMemory`)
 - Migration generator for live/history schema
 
 ## Requirements

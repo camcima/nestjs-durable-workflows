@@ -44,6 +44,7 @@ export {
 
 // Adapters
 export { DrizzleWorkflowAdapter } from './adapters/drizzle-workflow.adapter';
+export { InMemoryWorkflowAdapter } from './adapters/in-memory-workflow.adapter';
 export { PgWorkflowAdapter } from './adapters/pg-workflow.adapter';
 export {
   PrismaWorkflowAdapter,
