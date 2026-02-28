@@ -1,4 +1,4 @@
-import StateMachine = require('javascript-state-machine');
+import StateMachine from 'javascript-state-machine';
 import { RecursiveTransitionError } from '../errors/recursive-transition.error';
 import type {
   DurableWorkflowDefinition,
