@@ -1,7 +1,7 @@
 {
   "name": "nestjs-durable-workflows",
   "version": "0.1.1",
-  "description": "NestJS module for durable workflow execution with javascript-state-machine and PostgreSQL persistence",
+  "description": "NestJS module for durable workflow execution with XState and PostgreSQL persistence",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -40,7 +40,6 @@
     "@nestjs/event-emitter": ">=2.0.0",
     "@nestjs/schedule": ">=4.0.0",
     "drizzle-orm": ">=0.30.0",
-    "javascript-state-machine": ">=3.1.0",
     "pg": ">=8.0.0",
     "reflect-metadata": ">=0.1.13",
     "rxjs": ">=7.0.0"
@@ -70,7 +69,5 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0"
   },
-  "dependencies": {
-    "javascript-state-machine": "^3.1.0"
-  }
+  "dependencies": {}
 }

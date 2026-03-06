@@ -1,4 +1,3 @@
-import StateMachine from 'javascript-state-machine';
 import { RecursiveTransitionError } from '../errors/recursive-transition.error';
 import type {
   DurableWorkflowDefinition,
@@ -56,16 +55,11 @@ function cloneContext(
 }
 
 class JavascriptStateMachineRuntime implements IWorkflowRuntime {
-  private readonly fsm: StateMachine;
   private readonly compiled = new Map<string, StateTransitions>();
-  private readonly stateMachineTransitions: Array<{
-    name: string;
-    from: string;
-    to: string;
-  }> = [];
   private readonly transitions: RuntimeTransition[] = [];
   private readonly context: Record<string, unknown>;
   private status: WorkflowStatus;
+  private currentState: string;
 
   constructor(
     private readonly definition: DurableWorkflowDefinition,
@@ -76,28 +70,15 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
     const seed = hydrateSnapshot(workflowId, definition, snapshot);
     this.context = cloneContext(seed.context);
     this.status = seed.status;
+    this.currentState = seed.state;
 
     this.buildCompiledTransitions();
-
-    this.fsm = new StateMachine({
-      init: seed.state,
-      transitions: this.stateMachineTransitions,
-    });
-
-    this.fsm.observe('onAfterTransition', (lifecycle) => {
-      if (lifecycle.from !== lifecycle.to) {
-        this.transitions.push({
-          fromState: lifecycle.from,
-          toState: lifecycle.to,
-        });
-      }
-    });
   }
 
   async send(event: WorkflowEventPayload): Promise<RuntimeSendResult> {
     if (this.status === 'done') {
       return {
-        stateValue: this.fsm.state,
+        stateValue: this.currentState,
         done: true,
         transitions: [],
       };
@@ -132,12 +113,12 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
       // drain internal transitions until stable
     }
 
-    this.status = isFinalState(this.definition, this.fsm.state)
+    this.status = isFinalState(this.definition, this.currentState)
       ? 'done'
       : 'active';
 
     return {
-      stateValue: this.fsm.state,
+      stateValue: this.currentState,
       done: this.status === 'done',
       transitions: [...this.transitions],
     };
@@ -149,7 +130,7 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
     context: Record<string, unknown>;
   } {
     return {
-      stateValue: this.fsm.state,
+      stateValue: this.currentState,
       done: this.status === 'done',
       context: this.context,
     };
@@ -159,8 +140,8 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
     return {
       schema: 'durable-workflow-snapshot' as const,
       version: 1 as const,
-      engine: 'js-state-machine' as const,
-      state: this.fsm.state,
+      engine: 'xstate' as const,
+      state: this.currentState,
       status: this.status,
       context: this.context,
     };
@@ -179,39 +160,20 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
 
       for (const [eventType, rulesInput] of Object.entries(stateDef.on ?? {})) {
         const rules = toArray(rulesInput).map(toConfig);
-        const compiledRules: CompiledTransition[] = rules.map((rule) => {
-          const name = `tr${counter++}`;
-          if (rule.target) {
-            this.stateMachineTransitions.push({
-              name,
-              from: stateName,
-              to: rule.target,
-            });
-          }
-          return {
-            name,
-            from: stateName,
-            to: rule.target,
-            guard: rule.guard,
-            actions: toActions(rule.actions),
-          };
-        });
+        const compiledRules: CompiledTransition[] = rules.map((rule) => ({
+          name: `tr${counter++}`,
+          from: stateName,
+          to: rule.target,
+          guard: rule.guard,
+          actions: toActions(rule.actions),
+        }));
         stateTransitions.on.set(eventType, compiledRules);
       }
 
       for (const ruleInput of toArray(stateDef.always)) {
         const rule = toConfig(ruleInput);
-        const name = `tr${counter++}`;
-        if (rule.target) {
-          this.stateMachineTransitions.push({
-            name,
-            from: stateName,
-            to: rule.target,
-          });
-        }
-
         stateTransitions.always.push({
-          name,
+          name: `tr${counter++}`,
           from: stateName,
           to: rule.target,
           guard: rule.guard,
@@ -228,7 +190,7 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
     event: WorkflowEventPayload,
     onStateTransition: () => void,
   ): Promise<boolean> {
-    const current = this.compiled.get(this.fsm.state);
+    const current = this.compiled.get(this.currentState);
     if (!current) return false;
 
     const candidates =
@@ -244,8 +206,8 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
       if (!candidate.to) {
         await this.runActions(
           candidate.actions,
-          this.fsm.state,
-          this.fsm.state,
+          this.currentState,
+          this.currentState,
           event,
         );
         return false;
@@ -270,8 +232,8 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
     const result = candidate.guard({
       context: this.context,
       event,
-      fromState: this.fsm.state,
-      toState: candidate.to ?? this.fsm.state,
+      fromState: this.currentState,
+      toState: candidate.to ?? this.currentState,
     });
 
     if (typeof result !== 'boolean') {
@@ -287,7 +249,7 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
     candidate: CompiledTransition,
     event: WorkflowEventPayload,
   ): Promise<void> {
-    const fromState = this.fsm.state;
+    const fromState = this.currentState;
 
     await this.runActions(
       toActions(this.definition.states[fromState]?.exit),
@@ -296,21 +258,15 @@ class JavascriptStateMachineRuntime implements IWorkflowRuntime {
       event,
     );
 
-    const transitionFn = (this.fsm as Record<string, unknown>)[candidate.name];
-    if (typeof transitionFn !== 'function') {
-      throw new Error(
-        `Compiled transition ${candidate.name} is not available on runtime machine`,
-      );
+    this.currentState = candidate.to ?? fromState;
+    const toState = this.currentState;
+
+    if (fromState !== toState) {
+      this.transitions.push({
+        fromState,
+        toState,
+      });
     }
-
-    await Promise.resolve(
-      (transitionFn as (evt: WorkflowEventPayload) => unknown).call(
-        this.fsm,
-        event,
-      ),
-    );
-
-    const toState = this.fsm.state;
 
     await this.runActions(candidate.actions, fromState, toState, event);
 

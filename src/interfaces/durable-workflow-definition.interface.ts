@@ -48,7 +48,7 @@ export type WorkflowStatus = 'active' | 'done' | 'error';
 export interface DurableSnapshotV1 {
   schema: 'durable-workflow-snapshot';
   version: 1;
-  engine: 'js-state-machine';
+  engine: 'js-state-machine' | 'xstate';
   state: string;
   status: WorkflowStatus;
   context: Record<string, unknown>;
