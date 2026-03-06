@@ -23,7 +23,7 @@ function activeSnapshot() {
   return {
     schema: 'durable-workflow-snapshot',
     version: 1,
-    engine: 'js-state-machine',
+    engine: 'xstate',
     state: 'active',
     status: 'active',
     context: {},

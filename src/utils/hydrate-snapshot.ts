@@ -52,7 +52,10 @@ export function hydrateSnapshot(
     );
   }
 
-  if (candidate.engine !== 'js-state-machine') {
+  if (
+    candidate.engine !== 'js-state-machine' &&
+    candidate.engine !== 'xstate'
+  ) {
     throw new InvalidSnapshotError(
       workflowId,
       `Snapshot for workflow ${workflowId} has unsupported engine ${String(candidate.engine)}`,

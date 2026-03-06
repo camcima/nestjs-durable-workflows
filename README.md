@@ -3,7 +3,7 @@
 [![CI](https://github.com/camcima/nestjs-durable-workflows/actions/workflows/ci.yml/badge.svg)](https://github.com/camcima/nestjs-durable-workflows/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/camcima/nestjs-durable-workflows/branch/main/graph/badge.svg)](https://codecov.io/gh/camcima/nestjs-durable-workflows)
 
-A NestJS module for durable backend workflows with `javascript-state-machine` and PostgreSQL persistence.
+A NestJS module for durable backend workflows with `xstate` and PostgreSQL persistence.
 
 Define workflow types with durable workflow definitions. The module handles transactional persistence, rehydration, transition history, timeout expiration, and concurrency control.
 
@@ -21,13 +21,13 @@ Define workflow types with durable workflow definitions. The module handles tran
 
 - Node.js >= 18
 - NestJS >= 10
-- `javascript-state-machine` >= 3.1
+- `xstate` >= 5.0
 - PostgreSQL >= 15
 
 ## Installation
 
 ```bash
-npm install nestjs-durable-workflows javascript-state-machine drizzle-orm @nestjs/schedule @nestjs/event-emitter
+npm install nestjs-durable-workflows xstate drizzle-orm @nestjs/schedule @nestjs/event-emitter
 ```
 
 `@nestjs/common`, `@nestjs/core`, `rxjs`, and `reflect-metadata` are expected from your NestJS app.
@@ -40,6 +40,7 @@ npm install nestjs-durable-workflows javascript-state-machine drizzle-orm @nestj
 // src/order/order.definition.ts
 import type { DurableWorkflowDefinition } from 'nestjs-durable-workflows';
 
+// XState-style statechart definition consumed by the durable workflow engine
 export const orderDefinition: DurableWorkflowDefinition = {
   id: 'order',
   initial: 'idle',
@@ -72,6 +73,8 @@ export const orderDefinition: DurableWorkflowDefinition = {
   },
 };
 ```
+
+Persisted snapshots from this runtime use `engine: 'xstate'` and are backwards-compatible with previously stored `js-state-machine` snapshots.
 
 ### 2. Register Workflow Entity
 
